@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملتقى | عالم يجمعنا</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f4f5fa;--card:#fff;--text:#20243a;--muted:#85899b;--primary:#6958e8;--line:#ececf3}
+body.dark{--bg:#111321;--card:#1d2031;--text:#f4f4fa;--muted:#a4a7ba;--line:#303347}
+body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);transition:.2s}
+header{height:70px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 7%;position:sticky;top:0;z-index:10}
+.logo{font-size:27px;font-weight:bold;color:var(--primary)}
+.logo span{color:#ed75a6}
+nav{display:flex;gap:25px}
+nav button,.head-btn{border:0;background:none;color:var(--muted);font-size:15px;cursor:pointer}
+nav button.active{color:var(--primary);font-weight:bold}
+.head-btn{font-size:21px}
+.layout{max-width:1150px;margin:25px auto;display:grid;grid-template-columns:230px minmax(0,600px) 230px;gap:20px;padding:0 15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:16px}
+.profile{text-align:center}
+.avatar{width:65px;height:65px;border-radius:50%;object-fit:cover;background:#dcd6ff;display:grid;place-items:center;font-size:27px;margin:auto auto 10px}
+.muted{color:var(--muted);font-size:13px}
+.menu-item{padding:13px 8px;cursor:pointer;border-radius:10px}
+.menu-item:hover{background:var(--bg);color:var(--primary)}
+.stories{display:flex;gap:13px;overflow-x:auto;padding:4px 0 13px}
+.story{min-width:66px;text-align:center;font-size:12px;cursor:pointer}
+.story .avatar{width:57px;height:57px;border:3px solid #8c65eb;padding:3px}
+.story.add .avatar{border:2px dashed var(--primary);color:var(--primary)}
+input,textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:13px;border-radius:12px;font-family:inherit;outline:none}
+textarea{resize:vertical;min-height:75px}
+.btn{background:var(--primary);color:white;border:0;padding:11px 20px;border-radius:11px;cursor:pointer;font-family:inherit}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.post-head .avatar{width:43px;height:43px;margin:0}
+.post p{line-height:1.9;margin:12px 0}
+.post-actions{display:flex;gap:20px;border-top:1px solid var(--line);padding-top:13px;color:var(--muted)}
+.post-actions button{border:0;background:none;color:inherit;cursor:pointer;font-family:inherit}
+.post-actions button:hover{color:var(--primary)}
+.page{display:none}.page.active{display:block}
+.message{padding:13px 5px;border-bottom:1px solid var(--line);cursor:pointer}
+.message:hover{background:var(--bg)}
+.chatbox{display:none}
+footer{text-align:center;color:var(--muted);padding:30px;font-size:12px}
+@media(max-width:850px){.layout{grid-template-columns:1fr;max-width:620px}.side{display:none}nav{gap:12px}header{padding:0 15px}nav button{font-size:13px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">ملتقى<span>.</span></div>
+ <nav>
+  <button class="active" onclick="showPage('home',this)">الرئيسية</button>
+  <button onclick="showPage('messages',this)">الرسائل</button>
+  <button onclick="showPage('explore',this)">استكشف</button>
+  <button onclick="showPage('profile',this)">حسابي</button>
+ </nav>
+ <button class="head-btn" onclick="document.body.classList.toggle('dark')" title="تغيير المظهر">☾</button>
+</header>
+
+<div class="layout">
+<aside class="side">
+ <div class="card profile">
+  <div class="avatar">👤</div>
+  <b>مرحباً بك في ملتقى</b>
+  <p class="muted">مكانك للتواصل والمشاركة</p>
+ </div>
+ <div class="card">
+  <div class="menu-item" onclick="showPage('home')">🏠 الرئيسية</div>
+  <div class="menu-item" onclick="showPage('messages')">💬 الرسائل الخاصة</div>
+  <div class="menu-item" onclick="showPage('explore')">🌍 استكشف المنشورات</div>
+  <div class="menu-item" onclick="showPage('profile')">👤 الملف الشخصي</div>
+  <div class="menu-item" onclick="document.body.classList.toggle('dark')">🌙 الوضع الليلي</div>
+ </div>
+</aside>
+
+<main>
+<section id="home" class="page active">
+ <div class="card">
+  <b>القصص اليومية ✨</b>
+  <div class="stories">
+   <div class="story add" onclick="addStory()"><div class="avatar">＋</div>أضف قصة</div>
+   <div class="story"><div class="avatar">👨🏻</div>أحمد</div>
+   <div class="story"><div class="avatar">👩🏻</div>سارة</div>
+   <div class="story"><div class="avatar">🧑🏻</div>محمد</div>
+   <div class="story"><div class="avatar">👩🏼</div>نور</div>
+  </div>
+ </div>
+ <div class="card">
+  <b>بماذا تفكر اليوم؟ 💭</b>
+  <textarea id="postText" placeholder="شارك أفكارك مع مجتمع ملتقى..."></textarea>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+   <span class="muted">🌍 مشاركة عامة</span>
+   <button class="btn" onclick="addPost()">نشر المنشور</button>
+  </div>
+ </div>
+ <div id="posts">
+  <article class="card post">
+   <div class="post-head"><div class="avatar">👨🏻</div><div><b>أحمد العراقي</b><p class="muted">منذ 10 دقائق</p></div></div>
+   <p>أهلاً بكم في ملتقى ❤️ مساحة تجمعنا وتقرّب المسافات. شاركونا أفكاركم الجميلة!</p>
+   <div class="post-actions"><button onclick="like(this)">♡ إعجاب <span>0</span></button><button onclick="comment(this)">💬 تعليق</button><button onclick="sharePost()">↗ مشاركة</button></div>
+  </article>
+  <article class="card post">
+   <div class="post-head"><div class="avatar">👩🏻</div><div><b>سارة</b><p class="muted">منذ ساعة</p></div></div>
+   <p>البدايات الجميلة تصنع مستقبلاً أجمل 🌸</p>
+   <div class="post-actions"><button onclick="like(this)">♡ إعجاب <span>0</span></button><button onclick="comment(this)">💬 تعليق</button><button onclick="sharePost()">↗ مشاركة</button></div>
+  </article>
+ </div>
+</section>
+
+<section id="messages" class="page">
+ <div class="card">
+  <h3>💬 الرسائل الخاصة</h3>
+  <p class="muted" style="margin:10px 0">محادثاتك مع الأصدقاء</p>
+  <div class="message" onclick="openChat('أحمد')">👨🏻 أحمد <span class="muted"> — أهلاً، كيف حالك؟</span></div>
+  <div class="message" onclick="openChat('سارة')">👩🏻 سارة <span class="muted"> — مرحباً بك!</span></div>
+  <div class="chatbox" id="chatbox">
+   <h3 id="chatName" style="margin:15px 0"></h3>
+   <div id="chatMessages" class="card"></div>
+   <input id="messageInput" placeholder="اكتب رسالتك...">
+   <button class="btn" style="margin-top:10px" onclick="sendMessage()">إرسال</button>
+  </div>
+ </div>
+</section>
+
+<section id="explore" class="page">
+ <div class="card">
+  <h3>🌍 استكشف ملتقى</h3>
+  <p style="margin-top:12px">اكتشف المنشورات والأفكار الجديدة وتعرّف على مجتمع ملتقى.</p>
+  <input placeholder="ابحث عن منشور..." style="margin-top:15px" oninput="searchPosts(this.value)">
+ </div>
+ <div id="explorePosts"></div>
+</section>
+
+<section id="profile" class="page">
+ <div class="card profile">
+  <div class="avatar">👤</div>
+  <h3>ملفي الشخصي</h3>
+  <p class="muted" style="margin:10px">عضو في ملتقى</p>
+  <input placeholder="اكتب اسمك">
+  <textarea placeholder="اكتب نبذة عن نفسك" style="margin-top:12px"></textarea>
+  <button class="btn" style="margin-top:12px">حفظ التغييرات</button>
+ </div>
+</section>
+</main>
+
+<aside class="side">
+ <div class="card">
+  <b>🔎 اكتشف مجتمعنا</b>
+  <p class="muted" style="margin-top:10px">تواصل، شارك، وتعرّف على أصدقاء جدد.</p>
+ </div>
+ <div class="card">
+  <b>عن ملتقى</b>
+  <p class="muted" style="margin-top:10px;line-height:1.8">ملتقى، عالم يجمعنا. تواصل بحرية وشارك لحظاتك.</p>
+ </div>
+</aside>
+</div>
+<footer>ملتقى © 2026 — عالم يجمعنا ❤️</footer>
+
+<script>
+function showPage(id,btn){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+}
+function addPost(){
+ let input=document.getElementById('postText');
+ if(!input.value.trim())return alert('اكتب شيئاً أولاً');
+ let post=document.createElement('article');
+ post.className='card post';
+ post.innerHTML='<div class="post-head"><div class="avatar">👤</div><div><b>أنت</b><p class="muted">الآن</p></div></div><p></p><div class="post-actions"><button onclick="like(this)">♡ إعجاب <span>0</span></button><button onclick="comment(this)">💬 تعليق</button><button onclick="sharePost()">↗ مشاركة</button></div>';
+ post.querySelector('p').textContent=input.value;
+ document.getElementById('posts').prepend(post);
+ input.value='';
+}
+function like(btn){
+ let n=btn.querySelector('span');
+ let liked=btn.dataset.liked==='yes';
+ btn.dataset.liked=liked?'no':'yes';
+ n.textContent=Number(n.textContent)+(liked?-1:1);
+ btn.firstChild.textContent=liked?'♡ إعجاب ':'♥ أعجبني ';
+}
+function comment(btn){
+ let c=prompt('اكتب تعليقك:');
+ if(c)alert('تمت إضافة تعليقك في هذه النسخة التجريبية');
+}
+function sharePost(){alert('ميزة المشاركة ستُفعّل في النسخة القادمة');}
+function addStory(){alert('ميزة إضافة القصص ستُربط برفع الصور والفيديو في المرحلة القادمة');}
+let currentChat='';
+function openChat(name){
+ currentChat=name;
+ document.getElementById('chatbox').style.display='block';
+ document.getElementById('chatName').textContent='محادثة '+name;
+}
+function sendMessage(){
+ let input=document.getElementById('messageInput');
+ if(!input.value.trim())return;
+ let msg=document.createElement('p');
+ msg.textContent='أنت: '+input.value;
+ msg.style.padding='8px';
+ document.getElementById('chatMessages').appendChild(msg);
+ input.value='';
+}
+function searchPosts(q){
+ let posts=[...document.querySelectorAll('#posts .post')];
+ let result=document.getElementById('explorePosts');
+ result.innerHTML='';
+ posts.filter(p=>p.innerText.includes(q)).forEach(p=>result.appendChild(p.cloneNode(true)));
+}
+</script>
+</body>
+</html>
